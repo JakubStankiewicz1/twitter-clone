@@ -1,0 +1,153 @@
+<div class="home">
+
+    <div class="home_top">
+    
+        <div class="left">
+            <div class="left_main">
+                <img src="assets/landing/logo-white.png" alt="Logo">
+            </div>
+        </div>
+
+        <div class="right">
+            <div class="right_one">
+                <div class="right_oneContainer">
+                    <p>
+                        Najświeższe wieście ze świata
+                    </p>
+                </div>
+            </div>
+            <div class="right_two">
+                <p>
+                    Dołącz już dziś.
+                </p>
+            </div>
+            <div class="right_three">
+                <div class="right_three_container">
+                    <div class="right_three_container_btn">
+                        <div class="right_three_container_btn_one">
+                            <img src="assets/landing/google_icon.png" alt="">
+                        </div>
+                        <div class="right_three_container_btn_two">
+                            <p>
+                                Zarejestruj się przez Google
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="right_four">
+                <div class="right_four_container">
+                    <div class="right_four_container_btn">
+                        <div class="right_four_container_btn_one">
+                            <img src="assets/landing/apple_icon.png" alt="">
+                        </div>
+                        <div class="right_four_container_btn_two">
+                            <p>
+                                Zarejestruj się przez Apple
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="right_five">
+                <div class="right_five_container">
+                    <div class="right_five_container_one">
+                        <div class="right_five_container_one_line"></div>
+                    </div>
+                    <div class="right_five_container_two">
+                        <p>
+                            LUB
+                        </p>
+                    </div>
+                    <div class="right_five_container_three">
+                        <div class="right_five_container_three_line"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="right_six">
+                <div class="right_six_container">
+                    <!-- Utwórz konto btn -->
+                    <div class="right_six_container_btn" (click)="openCreateAccountModal()">
+                        <div class="right_six_container_btn_ctn">
+                            <p>
+                                Utwórz konto
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Policy data -->
+                    <div class="right_six_container_policy">
+                        <div class="right_six_container_policy_div">
+                            <p>
+                                Rejestrując się, zgadzasz się na <span>Warunki korzystania</span> i <span>Politykę prywatności</span>, łącznie z <span>Polityką ciasteczek</span>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="right_seven">
+                <div class="right_seven_container">
+                    Masz już konto?
+                </div>
+            </div>
+            <div class="right_right">
+                <div class="right_rightOutline" (click)="openLoginModal()">
+                    <p>
+                        Zaloguj się
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Footer Data -->
+    <div class="footer">
+        <div class="footer_container">
+            <div class="footer_links">
+                <a href="#">Informacje</a>
+                <a href="#">Pobierz aplikację serwisu X</a>
+                <a href="#">Grok</a>
+                <a href="#">Centrum Pomocy</a>
+                <a href="#">Zasady użytkowania</a>
+                <a href="#">Polityka prywatności</a>
+                <a href="#">Polityka dotycząca plików cookie</a>
+                <a href="#">Dostępność</a>
+                <a href="#">Informacje o reklamach</a>
+                <a href="#">Blog</a>
+                <a href="#">Praca</a>
+                <a href="#">Zasoby marki</a>
+                <a href="#">Reklamy</a>
+                <a href="#">Marketing</a>
+            </div>
+            <div class="footer_links_second">
+                <a href="#">X dla firm</a>
+                <a href="#">Deweloperzy</a>
+                <a href="#">Ścieżka</a>
+                <a href="#">Ustawienia</a>
+                <span>© 2025 X Corp.</span>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<!-- Create Account Modal -->
+<div class="modal-overlay" *ngIf="isCreateAccountModalOpen" (click)="closeCreateAccountModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <app-create-account (closeModal)="closeCreateAccountModal()"></app-create-account>
+    </div>
+</div>
+
+<!-- Login Modal -->
+<div class="modal-overlay" *ngIf="isLoginModalOpen" (click)="closeLoginModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <app-login 
+            (closeModal)="closeLoginModal()" 
+            (openCreateAccount)="switchToCreateAccount()">
+        </app-login>
+    </div>
+</div>
+

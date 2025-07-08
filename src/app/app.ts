@@ -5,11 +5,17 @@ import { RouterOutlet } from '@angular/router';
   selector: 'app-root',
   imports: [RouterOutlet],
   template: `
-    <h1>Welcome to {{title}}!</h1>
-
     <router-outlet />
   `,
-  styles: [],
+  styles: [`
+    :host {
+      display: block;
+      height: 100vh;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  `],
 })
 export class App {
   protected title = 'twitter-clone';
