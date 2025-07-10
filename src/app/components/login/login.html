@@ -14,61 +14,107 @@
 
   <div class="login-content">
     <h1>Zaloguj się do serwisu X</h1>
-    
-    <!-- Social Login Buttons -->
-    <div class="social-login">
-      <button class="social-btn google-btn" type="button" aria-label="Zaloguj się przez Google">
-        <img src="assets/landing/google_icon.png" alt="Google" width="18" height="18">
-        <span>Zaloguj się przez Google</span>
-      </button>
-      
-      <button class="social-btn apple-btn" type="button" aria-label="Zaloguj się przez Apple">
-        <img src="assets/landing/apple_icon.png" alt="Apple" width="18" height="18">
-        <span>Zaloguj się przez Apple</span>
-      </button>
-    </div>
 
-    <!-- Divider -->
-    <div class="divider">
-      <span>lub</span>
+    <!-- Komunikat błędu -->
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
     </div>
     
-    <!-- Login Form -->
-    <form class="login-form" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <div class="input-wrapper">
-          <input 
-            type="text" 
-            id="identifier" 
-            [(ngModel)]="formData.identifier" 
-            name="identifier"
-            required
-            [class.filled]="formData.identifier"
-            placeholder=" "
-            aria-label="Telefon, e-mail lub nazwa użytkownika"
-          />
-          <label for="identifier">Telefon, e-mail lub nazwa użytkownika</label>
-        </div>
+    <!-- KROK 1: Social login i email/username -->
+    <div *ngIf="currentStep === 1">
+      <!-- Social Login Buttons -->
+      <div class="social-login">
+        <button class="social-btn google-btn" type="button" aria-label="Zaloguj się przez Google">
+          <img src="assets/landing/google_icon.png" alt="Google" width="18" height="18">
+          <span>Zaloguj się przez Google</span>
+        </button>
+        
+        <button class="social-btn apple-btn" type="button" aria-label="Zaloguj się przez Apple">
+          <img src="assets/landing/apple_icon.png" alt="Apple" width="18" height="18">
+          <span>Zaloguj się przez Apple</span>
+        </button>
       </div>
 
-      <button 
-        type="submit" 
-        class="submit-btn"
-        [disabled]="!isFormValid()"
-        [class.disabled]="!isFormValid()"
-        aria-label="Dalej"
-      >
-        Dalej
-      </button>
-    </form>
+      <!-- Divider -->
+      <div class="divider">
+        <span>lub</span>
+      </div>
+      
+      <!-- Email/Username Form -->
+      <form class="login-form" (ngSubmit)="nextStep()">
+        <div class="form-group">
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              id="identifier" 
+              [(ngModel)]="formData.identifier" 
+              name="identifier"
+              required
+              [class.filled]="formData.identifier"
+              placeholder=" "
+              aria-label="Telefon, e-mail lub nazwa użytkownika"
+            />
+            <label for="identifier">Telefon, e-mail lub nazwa użytkownika</label>
+          </div>
+        </div>
+        
+        <button 
+          type="submit" 
+          class="next-btn"
+          [class.disabled]="!formData.identifier.trim()"
+          [disabled]="!formData.identifier.trim()">
+          Dalej
+        </button>
+      </form>
 
-    <div class="forgot-password">
-      <a href="#" class="forgot-link">Nie pamiętasz hasła?</a>
+      <!-- Sign up link -->
+      <div class="signup-section">
+        <span>Nie masz konta? </span>
+        <a href="#" (click)="onSignUpClick($event)" class="signup-link">Zarejestruj się</a>
+      </div>
     </div>
 
-    <div class="signup-link">
-      <span>Nie masz jeszcze konta? </span>
-      <a href="#" class="signup-action" (click)="onSignUpClick($event)">Zarejestruj się</a>
+    <!-- KROK 2: Hasło -->
+    <div *ngIf="currentStep === 2">
+      <!-- User identifier display -->
+      <div class="user-info">
+        <p>Logowanie do <strong>{{ formData.identifier }}</strong></p>
+        <button type="button" class="change-user" (click)="prevStep()">Zmień konto</button>
+      </div>
+
+      <!-- Password Form -->
+      <form class="login-form" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <div class="input-wrapper">
+            <input 
+              type="password" 
+              id="password" 
+              [(ngModel)]="formData.password" 
+              name="password"
+              required
+              [class.filled]="formData.password"
+              placeholder=" "
+              minlength="6"
+              aria-label="Hasło"
+            />
+            <label for="password">Hasło</label>
+          </div>
+        </div>
+        
+        <button 
+          type="submit" 
+          class="login-btn"
+          [class.disabled]="!isFormValid() || isLoading"
+          [disabled]="!isFormValid() || isLoading">
+          <span *ngIf="!isLoading">Zaloguj się</span>
+          <span *ngIf="isLoading">Logowanie...</span>
+        </button>
+      </form>
+
+      <!-- Forgot password link -->
+      <div class="forgot-password">
+        <a href="#" class="forgot-link">Nie pamiętasz hasła?</a>
+      </div>
     </div>
   </div>
 </div>
