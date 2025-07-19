@@ -4,6 +4,7 @@ import com.myxapp.backend.model.Post;
 import com.myxapp.backend.service.PostService;
 import com.myxapp.backend.service.LikeService;
 import com.myxapp.backend.service.MediaService;
+import com.myxapp.backend.dto.PostResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -98,5 +99,40 @@ public class PostController {
     @GetMapping("/search")
     public List<Post> searchPosts(@RequestParam String q) {
         return postService.searchPosts(q);
+    }
+
+    @GetMapping("/all")
+    public List<Post> getAllPostsRaw() {
+        return postService.getAllPosts();
+    }
+
+    @GetMapping("/foryou")
+    public List<PostResponse> getForYouPosts() {
+        return postService.getAllPosts().stream().map(this::toDto).toList();
+    }
+
+    @GetMapping("/following")
+    public List<PostResponse> getFollowingPosts(@RequestParam("userId") Long userId) {
+        return postService.getPostsForFollowing(userId).stream().map(this::toDto).toList();
+    }
+
+    private PostResponse toDto(Post post) {
+        PostResponse dto = new PostResponse();
+        dto.id = post.getId();
+        dto.userId = post.getAuthor().getId();
+        dto.content = post.getContent();
+        dto.createdAt = post.getCreatedAt();
+        dto.displayName = post.getAuthor().getDisplayName();
+        dto.username = post.getAuthor().getUsername();
+        if (post.getMedia() != null) {
+            dto.mediaUrls = post.getMedia().stream().map(media -> {
+                PostResponse.MediaDto m = new PostResponse.MediaDto();
+                m.url = media.getUrl();
+                m.type = media.getType();
+                m.altText = media.getAltText();
+                return m;
+            }).toList();
+        }
+        return dto;
     }
 }

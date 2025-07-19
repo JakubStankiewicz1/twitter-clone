@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LandingPage } from './landing-page/landing-page';
 import { Home } from './home/home';
 import { authGuard } from './guards/auth.guard';
+import { Messages } from './components/messages/messages';
 
 export const routes: Routes = [
     {
@@ -21,6 +22,11 @@ export const routes: Routes = [
                 m => m.Home
             )
         },
+        canActivate: [authGuard]
+    },
+    {
+        path: 'messages',
+        loadComponent: () => import('./components/messages/messages').then(m => m.Messages),
         canActivate: [authGuard]
     }
 ];

@@ -1,18 +1,21 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService, UserResponse } from '../../services/auth.service';
+import { PostModal } from './post-modal';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule],
+  imports: [CommonModule, PostModal],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss'
 })
 export class Sidebar implements OnInit, OnDestroy {
   currentUser: UserResponse | null = null;
   private userSubscription?: Subscription;
+  showPostModal = false;
+  @Output() postAdded = new EventEmitter<void>();
 
   constructor(
     private authService: AuthService,
@@ -47,9 +50,23 @@ export class Sidebar implements OnInit, OnDestroy {
     }
   }
 
+  // Usunięto duplikaty funkcji openPostModal, closePostModal, onPostAdded
   logout() {
     this.authService.logout();
     this.router.navigate(['/']);
+  }
+
+  openPostModal() {
+    this.showPostModal = true;
+  }
+
+  closePostModal() {
+    this.showPostModal = false;
+  }
+
+  onPostAdded() {
+    this.closePostModal();
+    this.postAdded.emit();
   }
 
   getInitials(displayName: string): string {

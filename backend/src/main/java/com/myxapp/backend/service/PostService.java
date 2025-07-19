@@ -4,6 +4,7 @@ import com.myxapp.backend.model.Post;
 import com.myxapp.backend.model.User;
 import com.myxapp.backend.repository.PostRepository;
 import com.myxapp.backend.repository.UserRepository;
+import com.myxapp.backend.repository.FollowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -17,6 +18,9 @@ public class PostService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private FollowRepository followRepository;
 
     public List<Post> getAllPosts() {
         return postRepository.findAllOrderByCreatedAtDesc();
@@ -66,5 +70,12 @@ public class PostService {
 
     public List<Post> searchPosts(String keyword) {
         return postRepository.findByContentContainingOrderByCreatedAtDesc(keyword);
+    }
+
+    public List<Post> getPostsForFollowing(Long userId) {
+        var following = followRepository.findByFollowerIdOrderByCreatedAtDesc(userId);
+        var authorIds = following.stream().map(f -> f.getFollowing().getId()).toList();
+        if (authorIds.isEmpty()) return List.of();
+        return postRepository.findByAuthorIdsOrderByCreatedAtDesc(authorIds);
     }
 }

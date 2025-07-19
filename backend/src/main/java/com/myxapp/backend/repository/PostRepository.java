@@ -17,4 +17,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("SELECT p FROM Post p WHERE p.content LIKE %:keyword% ORDER BY p.createdAt DESC")
     List<Post> findByContentContainingOrderByCreatedAtDesc(@Param("keyword") String keyword);
+
+    @Query("SELECT p FROM Post p WHERE p.author.id IN :authorIds ORDER BY p.createdAt DESC")
+    List<Post> findByAuthorIdsOrderByCreatedAtDesc(@Param("authorIds") List<Long> authorIds);
 }

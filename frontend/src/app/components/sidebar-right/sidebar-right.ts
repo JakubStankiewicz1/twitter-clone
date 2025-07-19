@@ -1,33 +1,23 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { UserService, UserSearchResult } from '../../services/user.service';
+import { AuthService, UserResponse } from '../../services/auth.service';
+import { FormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar-right',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './sidebar-right.html',
   styleUrl: './sidebar-right.scss'
 })
 export class SidebarRight {
-  whoToFollowUsers = [
-    {
-      name: 'Jarosław Wolski',
-      handle: '@wolski_jaros',
-      verified: true,
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face'
-    },
-    {
-      name: 'ethanweng',
-      handle: '@ethanwengg',
-      verified: true,
-      avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=40&h=40&fit=crop&crop=face'
-    },
-    {
-      name: 'Volodymyr Zelenskyy',
-      handle: '@ZelenskyyUa',
-      verified: true,
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face'
-    }
-  ];
+  searchQuery = '';
+  searchResults: UserSearchResult[] = [];
+  loading = false;
+  currentUser: UserResponse | null = null;
+  private searchSubject = new Subject<string>();
+  followingMap: { [userId: number]: boolean } = {};
 
   trendsData = [
     {
@@ -38,7 +28,46 @@ export class SidebarRight {
     }
   ];
 
-  followUser(user: any) {
-    console.log('Following user:', user.name);
+  constructor(private userService: UserService, private authService: AuthService) {
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+    });
+    this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(query => {
+      this.performSearch(query);
+    });
+  }
+
+  onSearchChange(query: string) {
+    this.searchSubject.next(query);
+  }
+
+  performSearch(query: string) {
+    if (!query.trim()) {
+      this.searchResults = [];
+      return;
+    }
+    this.loading = true;
+    this.userService.searchUsers(query).subscribe(users => {
+      this.searchResults = users.filter(u => !this.currentUser || u.id !== this.currentUser.id);
+      this.loading = false;
+      // Sprawdź follow dla każdego usera
+      if (this.currentUser) {
+        this.searchResults.forEach(user => {
+          this.userService.checkIfFollowing(this.currentUser!.id, user.id).subscribe(res => {
+            this.followingMap[user.id] = res.isFollowing;
+          });
+        });
+      }
+    }, () => this.loading = false);
+  }
+
+  toggleFollow(user: UserSearchResult) {
+    if (!this.currentUser) return;
+    this.userService.toggleFollow(this.currentUser.id, user.id).subscribe(res => {
+      this.followingMap[user.id] = res.isFollowing;
+    });
   }
 }
