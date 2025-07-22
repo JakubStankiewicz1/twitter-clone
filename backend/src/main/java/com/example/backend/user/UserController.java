@@ -104,14 +104,21 @@ public class UserController {
 
     @GetMapping("/search")
     public ResponseEntity<?> searchUsers(@RequestParam("query") String query) {
-        var users = userService.searchByUsername(query);
-        var result = users.stream().map(user -> java.util.Map.of(
-            "id", user.getId(),
-            "username", user.getUsername(),
-            "avatar", user.getAvatar(),
-            "bio", user.getBio()
-        )).toList();
-        return ResponseEntity.ok(result);
+        try {
+            var users = userService.searchByUsername(query);
+            var result = users.stream().map(user -> {
+                var map = new java.util.HashMap<String, Object>();
+                map.put("id", user.getId());
+                map.put("username", user.getUsername());
+                map.put("avatar", user.getAvatar() != null ? user.getAvatar() : "");
+                map.put("bio", user.getBio() != null ? user.getBio() : "");
+                return map;
+            }).toList();
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
     }
 
     public static class LoginRequest {

@@ -1,0 +1,35 @@
+<div class="main-hero-posts">
+  <div class="feed-tabs">
+    <button [class.active]="tab === 'foryou'" (click)="setTab('foryou')">For you</button>
+    <button [class.active]="tab === 'following'" (click)="setTab('following')">Following</button>
+  </div>
+
+  <form (ngSubmit)="addPost()" #postForm="ngForm" class="add-post-form">
+    <textarea [(ngModel)]="content" name="content" placeholder="Co się dzieje?" required rows="3"></textarea>
+    <input [(ngModel)]="mediaUrl" name="mediaUrl" placeholder="URL obrazka (opcjonalnie)" />
+    <input [(ngModel)]="mediaAlt" name="mediaAlt" placeholder="Opis obrazka (alt, opcjonalnie)" />
+    <button type="submit" [disabled]="adding || !content.trim()">Dodaj post</button>
+  </form>
+
+  <ng-container *ngIf="loading">Ładowanie postów...</ng-container>
+  <ng-container *ngIf="error">{{ error }}</ng-container>
+  <ng-container *ngIf="!loading && !error">
+    <div *ngIf="posts.length === 0">Brak postów do wyświetlenia.</div>
+    <div *ngFor="let post of posts" class="post">
+      <div class="post-header">
+        <div class="post-avatar" style="background:#8d4fd4; color:#fff; display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:50%; font-weight:bold; font-size:1.2rem; margin-right:12px;">
+          {{ post.user.username ? post.user.username.charAt(0).toUpperCase() : '?' }}
+        </div>
+        <div class="post-user-info">
+          <span class="post-user">{{ post.user.username || ('Użytkownik ID: ' + post.user.id) }}</span>
+          <span class="post-username">{{'@' + post.user.username}}</span>
+          <span class="post-date">{{ post.createdAt | date:'short' }}</span>
+        </div>
+      </div>
+      <div class="post-content">{{ post.content }}</div>
+      <div *ngIf="post.imageUrl" class="post-media">
+        <img [src]="post.imageUrl" alt="Obrazek do posta" class="post-image" />
+      </div>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,26 @@
+.home {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    justify-content: space-between;
+
+    .home_one {
+        display: flex;
+        flex: 1.32;
+        background-color: red;
+    }
+
+    .home_two {
+        display: flex;
+        flex: 1.65;
+        // background-color: yellow;
+        background-color: black;
+    }
+
+    .home_three {
+        display: flex;
+        flex: 1.63;
+        background-color: blue;
+    }
+}

@@ -33,13 +33,59 @@ public class ConversationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ConversationDto>> getUserConversations(@AuthenticationPrincipal String username) {
+    public ResponseEntity<List<ConversationFrontendDto>> getUserConversations(@AuthenticationPrincipal String username) {
         User user = userService.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
-        List<ConversationDto> dtos = conversationService.getUserConversations(user).stream()
-                .map(c -> new ConversationDto(c.getId(), c.getUser1().getUsername(), c.getUser2().getUsername()))
-                .collect(Collectors.toList());
+        List<ConversationFrontendDto> dtos = conversationService.getUserConversations(user).stream()
+                .map(c -> {
+                    User other = c.getUser1().getId().equals(user.getId()) ? c.getUser2() : c.getUser1();
+                    return new ConversationFrontendDto(
+                        c.getId(),
+                        new ConversationFrontendDto.UserDto(
+                            other.getId(),
+                            other.getUsername(),
+                            other.getAvatar(),
+                            other.getBio()
+                        )
+                    );
+                })
+                .toList();
         return ResponseEntity.ok(dtos);
+    }
+
+    public static class ConversationFrontendDto {
+        private Long id;
+        private UserDto otherUser;
+
+        public ConversationFrontendDto(Long id, UserDto otherUser) {
+            this.id = id;
+            this.otherUser = otherUser;
+        }
+        public Long getId() { return id; }
+        public void setId(Long id) { this.id = id; }
+        public UserDto getOtherUser() { return otherUser; }
+        public void setOtherUser(UserDto otherUser) { this.otherUser = otherUser; }
+
+        public static class UserDto {
+            private Long id;
+            private String username;
+            private String avatar;
+            private String bio;
+            public UserDto(Long id, String username, String avatar, String bio) {
+                this.id = id;
+                this.username = username;
+                this.avatar = avatar;
+                this.bio = bio;
+            }
+            public Long getId() { return id; }
+            public void setId(Long id) { this.id = id; }
+            public String getUsername() { return username; }
+            public void setUsername(String username) { this.username = username; }
+            public String getAvatar() { return avatar; }
+            public void setAvatar(String avatar) { this.avatar = avatar; }
+            public String getBio() { return bio; }
+            public void setBio(String bio) { this.bio = bio; }
+        }
     }
 
     @PostMapping("/with/{otherUsername}")

@@ -1,0 +1,80 @@
+<div class="sidebar-right">
+  <!-- Search Section -->
+  <div class="sidebar-right-sele">
+    <div class="search-container">
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <g>
+            <path d="M10.25 3.75c-3.59 0-6.5 2.91-6.5 6.5s2.91 6.5 6.5 6.5c1.795 0 3.419-.726 4.596-1.904 1.178-1.177 1.904-2.801 1.904-4.596 0-3.59-2.91-6.5-6.5-6.5zm-8.5 6.5c0-4.694 3.806-8.5 8.5-8.5s8.5 3.806 8.5 8.5c0 1.986-.682 3.815-1.824 5.262l4.781 4.781-1.414 1.414-4.781-4.781c-1.447 1.142-3.276 1.824-5.262 1.824-4.694 0-8.5-3.806-8.5-8.5z"></path>
+          </g>
+        </svg>
+        <input type="text" placeholder="Search users" class="search-input" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange($event)">
+      </div>
+    </div>
+
+    <!-- Dynamic User Search Results -->
+    <div class="section-container" *ngIf="searchQuery.trim()">
+      <h2 class="section-title">Users</h2>
+      <div *ngIf="loading" style="padding: 16px; text-align: center; color: #1d9bf0;">Loading...</div>
+      <div class="users-list">
+        <div class="user-item" *ngFor="let user of searchResults">
+          <div class="user-info">
+            <div class="user-avatar" style="background:#8d4fd4; color:#fff; display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:50%; font-weight:bold; font-size:1.2rem; margin-right:12px;">
+              {{ user.username.charAt(0).toUpperCase() }}
+            </div>
+            <div class="user-details">
+              <div class="user-name-container">
+                <span class="user-name">{{ user.username }}</span>
+              </div>
+              <span class="user-handle">{{'@' + user.username}}</span>
+            </div>
+          </div>
+          <button class="follow-btn" (click)="toggleFollow(user)">
+            {{ followingMap[user.id] ? 'Unfollow' : 'Follow' }}
+          </button>
+        </div>
+        <div *ngIf="!loading && searchResults.length === 0" style="padding: 16px; color: #71767b;">No users found.</div>
+      </div>
+    </div>
+
+    <!-- What's happening Section (pozostaje bez zmian) -->
+    <div class="section-container">
+      <h2 class="section-title">What's happening</h2>
+      <div class="trends-list">
+        <div class="trend-item" *ngFor="let trend of trendsData">
+          <div class="trend-content">
+            <img [src]="trend.image" [alt]="trend.title" [title]="trend.title" class="trend-image">
+            <div class="trend-details">
+              <div class="trend-category">
+                {{ trend.category }}
+                <span class="live-badge" *ngIf="trend.status === 'LIVE'">{{ trend.status }}</span>
+              </div>
+              <div class="trend-title">{{ trend.title }}</div>
+            </div>
+          </div>
+          <button class="more-options-btn" title="More options">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <g>
+                <path d="M3 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm9 2c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm7 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"></path>
+              </g>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="trend-item simple">
+        <div class="trend-details">
+          <div class="trend-meta">Trending in Poland</div>
+          <div class="trend-title">Bangladeszu</div>
+          <div class="trend-posts">2,206 posts</div>
+        </div>
+        <button class="more-options-btn" title="More options">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <g>
+              <path d="M3 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm9 2c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm7 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"></path>
+            </g>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

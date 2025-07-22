@@ -1,0 +1,324 @@
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    // width: 275px;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #000000;
+    color: #e7e9ea;
+    padding: 0 0 20px 0;
+    border-right: 1px solid #2f3336;
+    font-family: TwitterChirp, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+    .sidebar_container {
+        // background-color: green;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: flex-end;
+        // padding-right: 70px;
+    }
+
+    .sidebar__top {
+        display: flex;
+        flex-direction: column;
+        padding: 0 12px;
+        flex: 1;
+
+        .sidebar__logo {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 12px 12px 32px 12px;
+            margin-bottom: 2px;
+
+            .logo-icon {
+                width: 30px;
+                height: 30px;
+                fill: #e7e9ea;
+            }
+        }
+
+        .sidebar__menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+
+            li {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+                font-size: 20px;
+                font-weight: 400;
+                line-height: 24px;
+                padding: 12px;
+                margin-bottom: 2px;
+                border-radius: 24px;
+                cursor: pointer;
+                transition: background-color 0.2s ease;
+                color: #e7e9ea;
+
+                &:hover {
+                    background-color: rgba(231, 233, 234, 0.1);
+                }
+
+                &.active {
+                    font-weight: 700;
+
+                    .sidebar__icon svg {
+                        fill: #e7e9ea;
+                    }
+
+                    .sidebar__label {
+                        color: #e7e9ea;
+                    }
+                }
+
+                .sidebar__icon {
+                    width: 26.25px;
+                    height: 26.25px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-shrink: 0;
+
+                    img {
+                        width: 26.25px;
+                        height: 26.25px;
+                        filter: brightness(0) invert(1);
+                    }
+
+                    svg {
+                        width: 26.25px;
+                        height: 26.25px;
+                        fill: #e7e9ea;
+                    }
+                }
+
+                .sidebar__label {
+                    flex: 1;
+                    color: #e7e9ea;
+                    font-size: 20px;
+                    line-height: 24px;
+                }
+            }
+        }
+
+        .sidebar__post {
+            margin: 32px 21px 20px 0;
+            width: 220px;
+            align-self: center;
+            background-color: #ffffff;
+            color: #000000;
+            font-weight: 700;
+            font-size: 17px;
+            line-height: 20px;
+            border: none;
+            border-radius: 24px;
+            padding: 16px 32px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            font-family: inherit;
+
+            &:hover {
+                background-color: #1a8cd8;
+            }
+
+            &:active {
+                background-color: #1570a6;
+            }
+        }
+    }
+
+    .sidebar__bottom {
+        padding: 12px;
+        margin-top: auto;
+
+        .sidebar__user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+
+            &:hover {
+                background-color: rgba(231, 233, 234, 0.1);
+            }
+
+            .sidebar__avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-color: #7c3aed;
+                color: #ffffff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 20px;
+                font-weight: 700;
+                flex-shrink: 0;
+            }
+
+            .sidebar__user-info {
+                display: flex;
+                flex-direction: column;
+                line-height: 1.2;
+                flex: 1;
+                min-width: 0;
+
+                .sidebar__user-name {
+                    font-size: 15px;
+                    font-weight: 700;
+                    color: #e7e9ea;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                .sidebar__user-handle {
+                    font-size: 15px;
+                    color: #71767b;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+
+            .sidebar__user-more {
+                margin-left: auto;
+                color: #e7e9ea;
+                flex-shrink: 0;
+                padding: 4px;
+
+                svg {
+                    width: 18.75px;
+                    height: 18.75px;
+                    fill: currentColor;
+                }
+            }
+        }
+    }
+
+    // Responsive design
+    @media (max-width: 1300px) {
+        width: 88px;
+        
+        .sidebar__top {
+            align-items: center;
+            
+            .sidebar__logo {
+                justify-content: center;
+                padding: 12px;
+            }
+            
+            .sidebar__menu {
+                li {
+                    justify-content: center;
+                    padding: 12px;
+                    
+                    .sidebar__label {
+                        display: none;
+                    }
+                }
+            }
+            
+            .sidebar__post {
+                width: 52px;
+                height: 52px;
+                border-radius: 50%;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                
+                &::before {
+                    content: "✏";
+                }
+                
+                &:empty::before {
+                    content: "✏";
+                }
+            }
+        }
+        
+        .sidebar__bottom {
+            .sidebar__user {
+                justify-content: center;
+                
+                .sidebar__user-info,
+                .sidebar__user-more {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 500px) {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: auto;
+        min-height: 60px;
+        flex-direction: row;
+        border-right: none;
+        border-top: 1px solid #2f3336;
+        z-index: 1000;
+        
+        .sidebar__top {
+            flex-direction: row;
+            flex: 1;
+            padding: 0;
+            
+            .sidebar__logo {
+                display: none;
+            }
+            
+            .sidebar__menu {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+                width: 100%;
+                
+                li {
+                    flex-direction: column;
+                    gap: 4px;
+                    padding: 8px 4px;
+                    font-size: 10px;
+                    
+                    &:nth-child(n+6) {
+                        display: none;
+                    }
+                    
+                    .sidebar__icon {
+                        width: 24px;
+                        height: 24px;
+                        
+                        svg {
+                            width: 24px;
+                            height: 24px;
+                        }
+                    }
+                    
+                    .sidebar__label {
+                        font-size: 10px;
+                    }
+                }
+            }
+            
+            .sidebar__post {
+                display: none;
+            }
+        }
+        
+        .sidebar__bottom {
+            display: none;
+        }
+    }
+}
