@@ -13,6 +13,10 @@ html, body {
     overflow: hidden;
 }
 
+html, body, * {
+  font-family: TwitterChirp, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+}
+
 app-root {
     display: block;
     height: 100vh;
