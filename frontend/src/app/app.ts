@@ -5,15 +5,27 @@ import { RouterOutlet } from '@angular/router';
   selector: 'app-root',
   imports: [RouterOutlet],
   template: `
-    <router-outlet />
+    <div class="app-layout">
+      <div class="app-content">
+        <router-outlet />
+      </div>
+    </div>
   `,
   styles: [`
-    :host {
-      display: block;
+    .app-layout {
+      display: flex;
       height: 100vh;
-      width: 100%;
+      width: 100vw;
       margin: 0;
       padding: 0;
+      background: #000;
+    }
+    .app-content {
+      flex: 1 1 auto;
+      min-width: 0;
+      height: 100vh;
+      overflow-y: auto;
+      background: #000;
     }
   `],
 })

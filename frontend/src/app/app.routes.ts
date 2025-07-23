@@ -1,15 +1,12 @@
 import { Routes } from '@angular/router';
-import { LandingPage } from './landing-page/landing-page';
-import { Home } from './home/home';
 import { authGuard } from './guards/auth.guard';
-import { Messages } from './components/messages/messages';
 
 export const routes: Routes = [
     {
         path: '',
         pathMatch: 'full',
         loadComponent: () => {
-            return import('./landing-page/landing-page').then(
+            return import('./pages/landing-page/landing-page').then(
                     m => m.LandingPage
             );
         }
@@ -18,7 +15,7 @@ export const routes: Routes = [
     {
         path: 'home',
         loadComponent: () => {
-            return import('./home/home').then(
+            return import('./pages/home/home').then(
                 m => m.Home
             )
         },
@@ -26,7 +23,20 @@ export const routes: Routes = [
     },
     {
         path: 'messages',
-        loadComponent: () => import('./components/messages/messages').then(m => m.Messages),
+        loadComponent: () => import('./pages/messages/messages').then(m => m.Messages),
         canActivate: [authGuard]
+    },
+    {
+        path: 'explore',
+        loadComponent: () => import('./pages/explore/explore').then(m => m.Explore),
+        canActivate: [authGuard]
+    },
+    {
+        path: 'user/:username',
+        loadComponent: () => import('./pages/user/user-profile').then(m => m.UserProfile)
+    },
+    {
+        path: 'post/:id',
+        loadComponent: () => import('./pages/post/post-page').then(m => m.PostPage)
     }
 ];

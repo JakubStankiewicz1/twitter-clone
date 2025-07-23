@@ -3,11 +3,14 @@ package com.example.backend.user;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.example.backend.user.FollowService;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
+    @Autowired
+    private FollowService followService;
 
     @Autowired
     public UserController(UserService userService) {
@@ -119,6 +122,28 @@ public class UserController {
             e.printStackTrace();
             return ResponseEntity.status(500).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/{usernameOrEmail}")
+    public ResponseEntity<?> getUserByUsernameOrEmail(@PathVariable String usernameOrEmail) {
+        var userOpt = userService.findByUsername(usernameOrEmail);
+        if (userOpt.isEmpty()) {
+            userOpt = userService.findByEmail(usernameOrEmail);
+        }
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body("Nie znaleziono użytkownika");
+        }
+        var user = userOpt.get();
+        var map = new java.util.HashMap<String, Object>();
+        map.put("id", user.getId());
+        map.put("username", user.getUsername());
+        map.put("avatar", user.getAvatar());
+        map.put("bio", user.getBio());
+        long followers = followService.countFollowers(user);
+        long following = followService.countFollowing(user);
+        map.put("followersCount", followers);
+        map.put("followingCount", following);
+        return ResponseEntity.ok(map);
     }
 
     public static class LoginRequest {

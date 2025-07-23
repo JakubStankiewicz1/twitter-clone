@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { Sidebar } from '../components/sidebar/sidebar';
-import { SidebarRight } from "../components/sidebar-right/sidebar-right";
-import { MainHero } from "../components/main-hero/main-hero";
+import { Sidebar } from '../../components/sidebar/sidebar';
+import { SidebarRight } from '../../components/sidebar-right/sidebar-right';
+import { MainHero } from '../../components/main-hero/main-hero';
 
 @Component({
   selector: 'app-home',

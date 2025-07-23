@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CreateAccount } from '../components/create-account/create-account';
-import { Login } from '../components/login/login';
+import { CreateAccount } from '../../components/create-account/create-account';
+import { Login } from '../../components/login/login';
 
 @Component({
   selector: 'app-landing-page',

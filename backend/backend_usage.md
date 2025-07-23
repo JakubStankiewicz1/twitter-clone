@@ -264,3 +264,28 @@ Każdy nowy endpoint będzie tu opisywany.
   ```
 
 ---
+
+## Pobieranie użytkownika po loginie lub e-mailu
+
+- Endpoint: `GET /api/users/{usernameOrEmail}`
+- `{usernameOrEmail}` – login lub e-mail użytkownika (jeśli e-mail, zamień `@` na `%40`, np. `tester1%40gmail.com`)
+- Oczekiwany rezultat: 200 OK, zwraca dane użytkownika (id, username, avatar, bio, followersCount, followingCount).
+- Przykład:
+  ```
+  GET /api/users/janek
+  GET /api/users/tester1%40gmail.com
+  ```
+- Przykładowa odpowiedź:
+  ```json
+  {
+    "id": 1,
+    "username": "janek",
+    "avatar": "url_do_avatara",
+    "bio": "opis",
+    "followersCount": 5,
+    "followingCount": 3
+  }
+  ```
+- Jeśli użytkownik nie istnieje: 404 Not Found
+
+---

@@ -3,10 +3,11 @@ import { FormsModule } from '@angular/forms';
 import { DatePipe, CommonModule } from '@angular/common';
 import { PostService, Post } from '../../services/post.service';
 import { AuthService, UserResponse } from '../../services/auth.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-main-hero',
-  imports: [CommonModule, FormsModule, DatePipe],
+  imports: [CommonModule, FormsModule, DatePipe, RouterModule],
   templateUrl: './main-hero.html',
   styleUrl: './main-hero.scss'
 })

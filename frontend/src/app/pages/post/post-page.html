@@ -1,0 +1,42 @@
+<div class="post-page-container">
+  <ng-container *ngIf="loading">Ładowanie posta...</ng-container>
+  <ng-container *ngIf="error">{{ error }}</ng-container>
+  <ng-container *ngIf="!loading && post">
+    <div class="post-card">
+      <div class="post-header">
+        <div class="post-avatar">{{ post.user.username.charAt(0).toUpperCase() }}</div>
+        <div class="post-user-info">
+          <span class="post-user">{{ post.user.username }}</span>
+          <span class="post-date">{{ post.createdAt | date:'short' }}</span>
+        </div>
+      </div>
+      <div class="post-content">{{ post.content }}</div>
+      <div *ngIf="post.imageUrl" class="post-media">
+        <img [src]="post.imageUrl" alt="Obrazek do posta" class="post-image" />
+      </div>
+      <div class="post-actions">
+        <!-- Możesz dodać obsługę lajków tutaj w przyszłości -->
+      </div>
+    </div>
+    <div class="comments-section">
+      <h2>Komentarze</h2>
+      <form class="add-comment-form" (ngSubmit)="addComment()">
+        <textarea [(ngModel)]="newComment" name="newComment" placeholder="Dodaj komentarz..." rows="2" [disabled]="addingComment"></textarea>
+        <button type="submit" [disabled]="!newComment.trim() || addingComment">Dodaj</button>
+      </form>
+      <div *ngIf="comments.length === 0" class="empty-comments">Brak komentarzy.</div>
+      <div class="comment-list">
+        <div *ngFor="let comment of comments" class="comment-item">
+          <div class="comment-avatar">{{ comment.username.charAt(0).toUpperCase() }}</div>
+          <div class="comment-body">
+            <div class="comment-header">
+              <span class="comment-user">{{ comment.username }}</span>
+              <span class="comment-date">{{ comment.createdAt | date:'short' }}</span>
+            </div>
+            <div class="comment-content">{{ comment.content }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div> 

@@ -1,0 +1,115 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { UserService, UserSearchResult } from '../../services/user.service';
+import { PostService, Post } from '../../services/post.service';
+import { AppLayout } from '../../components/app-layout/app-layout';
+
+@Component({
+  selector: 'app-user-profile',
+  imports: [CommonModule, AppLayout],
+  template: `
+    <app-layout>
+      <div class="user-profile-container" *ngIf="!loading && user; else loadingOrError">
+        <div class="profile-header">
+          <div class="profile-banner"></div>
+          <div class="profile-avatar">
+            <img [src]="getAvatarUrl()" alt="Avatar" />
+          </div>
+          <div class="profile-info">
+            <h1 class="profile-name">{{ user.username }}</h1>
+            <div class="profile-username">&#64;{{ user.username }}</div>
+            <div class="profile-bio" *ngIf="user.bio">{{ user.bio }}</div>
+            <div class="profile-meta">
+              <span *ngIf="user.followersCount !== undefined">{{ user.followersCount }} followers</span>
+              <span *ngIf="user.followingCount !== undefined">{{ user.followingCount }} following</span>
+              <span *ngIf="user.createdAt">• Joined {{ user.createdAt | date:'MMMM yyyy' }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="profile-posts">
+          <h2>Posts</h2>
+          <div *ngIf="posts.length === 0" class="profile-empty">Brak postów.</div>
+          <div *ngFor="let post of posts" class="profile-post">
+            <div class="post-header">
+              <div class="post-avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
+              <div class="post-user-info">
+                <span class="post-user">{{ user.username }}</span>
+                <span class="post-date">{{ post.createdAt | date:'short' }}</span>
+              </div>
+            </div>
+            <div class="post-content">{{ post.content }}</div>
+            <div *ngIf="post.imageUrl" class="post-media">
+              <img [src]="post.imageUrl" alt="Obrazek do posta" class="post-image" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template #loadingOrError>
+        <div *ngIf="loading" class="profile-loading">Ładowanie profilu...</div>
+        <div *ngIf="error" class="profile-error">{{ error }}</div>
+      </ng-template>
+    </app-layout>
+  `,
+  styleUrl: './user-profile.scss'
+})
+export class UserProfile implements OnInit {
+  username: string = '';
+  user: UserSearchResult | null = null;
+  posts: Post[] = [];
+  loading = true;
+  error: string | null = null;
+
+  constructor(private route: ActivatedRoute, private userService: UserService, private postService: PostService) {}
+
+  ngOnInit() {
+    this.route.paramMap.subscribe(params => {
+      this.username = params.get('username') || '';
+      if (this.username) {
+        this.userService.getUserByUsername(this.username).subscribe({
+          next: user => {
+            this.user = user;
+            this.loading = false;
+            // Pobierz posty po ID użytkownika
+            this.postService.getPostsByUserId(user.id).subscribe({
+              next: posts => this.posts = posts,
+              error: () => this.posts = []
+            });
+          },
+          error: () => {
+            this.error = 'Nie znaleziono użytkownika';
+            this.loading = false;
+          }
+        });
+      }
+    });
+  }
+
+  fetchUser() {
+    this.userService.getUserByUsername(this.username).subscribe({
+      next: user => {
+        this.user = user;
+        this.loading = false;
+      },
+      error: () => {
+        this.error = 'Nie znaleziono użytkownika';
+        this.loading = false;
+      }
+    });
+  }
+
+  fetchPosts() {
+    this.postService.getPostsByUsername(this.username).subscribe({
+      next: posts => {
+        this.posts = posts;
+      },
+      error: () => {
+        this.posts = [];
+      }
+    });
+  }
+
+  getAvatarUrl(): string {
+    return this.user?.avatar || 'assets/landing/logo-white.png';
+  }
+} 

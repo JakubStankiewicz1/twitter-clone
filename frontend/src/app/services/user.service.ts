@@ -7,6 +7,9 @@ export interface UserSearchResult {
   username: string;
   bio?: string;
   avatar?: string;
+  followersCount?: number;
+  followingCount?: number;
+  createdAt?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -42,6 +45,10 @@ export class UserService {
 
   getFollowCounts(username: string): Observable<{followers: number, following: number}> {
     return this.http.get<{followers: number, following: number}>(`${this.followUrl}/${username}/counts`);
+  }
+
+  getUserByUsername(username: string): Observable<UserSearchResult> {
+    return this.http.get<UserSearchResult>(`${this.apiUrl}/${username}`);
   }
 
   private authHeader(): { [header: string]: string } {

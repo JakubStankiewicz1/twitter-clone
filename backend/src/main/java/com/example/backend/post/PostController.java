@@ -124,6 +124,14 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
+    // Pobieranie pojedynczego posta po ID
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getPostById(@PathVariable Long id) {
+        Optional<Post> postOpt = postService.getPost(id);
+        if (postOpt.isEmpty()) return ResponseEntity.status(404).body("Nie znaleziono posta");
+        return ResponseEntity.ok(postOpt.get());
+    }
+
     private String getUsernameFromHeader(String authHeader) {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) return null;
         String token = authHeader.substring(7);

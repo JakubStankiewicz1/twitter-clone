@@ -80,6 +80,18 @@ export class PostService {
     });
   }
 
+  getPostsByUsername(username: string): Observable<Post[]> {
+    return this.http.get<Post[]>(`${this.apiUrl}/user/${username}`);
+  }
+
+  getPostsByUserId(userId: number): Observable<Post[]> {
+    return this.http.get<Post[]>(`${this.apiUrl}/user/${userId}`);
+  }
+
+  getPostById(postId: number): Observable<Post> {
+    return this.http.get<Post>(`${this.apiUrl}/${postId}`);
+  }
+
   private authHeader(): { [header: string]: string } {
     const token = localStorage.getItem('auth-token');
     return token ? { 'Authorization': `Bearer ${token}` } : {};
