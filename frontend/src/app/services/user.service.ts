@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { UserResponse } from './auth.service';
 
 export interface UserSearchResult {
   id: number;
@@ -12,10 +13,18 @@ export interface UserSearchResult {
   createdAt?: string;
 }
 
+export interface UserComment {
+  id: number;
+  content: string;
+  username: string;
+  createdAt: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private apiUrl = '/api/users';
   private followUrl = '/api/follow';
+  private commentsUrl = '/api/comments/user';
 
   constructor(private http: HttpClient) {}
 
@@ -24,13 +33,13 @@ export class UserService {
   }
 
   follow(username: string): Observable<any> {
-    return this.http.post<any>(`${this.followUrl}/${username}`, {}, {
+    return this.http.post<any>(`${this.followUrl}/${encodeURIComponent(username)}`, {}, {
       headers: this.authHeader()
     });
   }
 
   unfollow(username: string): Observable<any> {
-    return this.http.delete<any>(`${this.followUrl}/${username}`, {
+    return this.http.delete<any>(`${this.followUrl}/${encodeURIComponent(username)}`, {
       headers: this.authHeader()
     });
   }
@@ -49,6 +58,22 @@ export class UserService {
 
   getUserByUsername(username: string): Observable<UserSearchResult> {
     return this.http.get<UserSearchResult>(`${this.apiUrl}/${username}`);
+  }
+
+  getUserComments(username: string): Observable<UserComment[]> {
+    return this.http.get<UserComment[]>(`${this.commentsUrl}/${username}`);
+  }
+
+  updateProfile(data: Partial<UserResponse & { password?: string }>): Observable<UserResponse> {
+    return this.http.put<UserResponse>(`/api/users/profile`, data, {
+      headers: this.authHeader()
+    });
+  }
+
+  getOwnProfile(): Observable<UserResponse> {
+    return this.http.get<UserResponse>(`/api/users/profile`, {
+      headers: this.authHeader()
+    });
   }
 
   private authHeader(): { [header: string]: string } {

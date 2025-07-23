@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService, UserResponse } from '../../services/auth.service';
@@ -7,7 +8,7 @@ import { PostModal } from './post-modal';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, PostModal],
+  imports: [CommonModule, RouterModule, PostModal],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss'
 })
@@ -16,6 +17,7 @@ export class Sidebar implements OnInit, OnDestroy {
   private userSubscription?: Subscription;
   showPostModal = false;
   @Output() postAdded = new EventEmitter<void>();
+  showUserMenu = false;
 
   constructor(
     private authService: AuthService,
@@ -32,6 +34,7 @@ export class Sidebar implements OnInit, OnDestroy {
     if (this.authService.isLoggedIn()) {
       this.authService.getProfile().subscribe({
         next: (user: UserResponse) => {
+          this.authService.setCurrentUser(user); // Ustawiamy currentUser na podstawie backendu
           console.log('Pobrany użytkownik:', user);
         },
         error: (error: any) => {
@@ -51,9 +54,30 @@ export class Sidebar implements OnInit, OnDestroy {
   }
 
   // Usunięto duplikaty funkcji openPostModal, closePostModal, onPostAdded
+  toggleUserMenu(event: Event) {
+    event.stopPropagation();
+    this.showUserMenu = !this.showUserMenu;
+    if (this.showUserMenu) {
+      setTimeout(() => {
+        window.addEventListener('click', this.closeUserMenu);
+      });
+    }
+  }
+
+  closeUserMenu = () => {
+    this.showUserMenu = false;
+    window.removeEventListener('click', this.closeUserMenu);
+  };
+
+  addAccount() {
+    alert('Add account (not implemented yet)');
+    this.showUserMenu = false;
+  }
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/']);
+    this.showUserMenu = false;
   }
 
   openPostModal() {

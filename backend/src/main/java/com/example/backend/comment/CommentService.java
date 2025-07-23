@@ -24,6 +24,10 @@ public class CommentService {
         return commentRepository.findByPostId(postId);
     }
 
+    public List<Comment> getCommentsByUsername(String username) {
+        return commentRepository.findByUser_Username(username);
+    }
+
     public void deleteComment(Long commentId) {
         commentRepository.deleteById(commentId);
     }

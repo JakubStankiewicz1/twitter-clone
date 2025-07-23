@@ -27,6 +27,7 @@ export interface UserResponse {
   email: string;
   bio?: string;
   avatar?: string;
+  createdAt?: string;
 }
 
 @Injectable({
@@ -150,5 +151,9 @@ export class AuthService {
       };
     }
     return null;
+  }
+
+  public setCurrentUser(user: UserResponse | null) {
+    this.currentUserSubject.next(user);
   }
 }

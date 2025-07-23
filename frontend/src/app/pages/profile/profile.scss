@@ -1,0 +1,315 @@
+.user-profile-container {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  background: #000;
+  color: #e7e9ea;
+  border-radius: 16px;
+  box-shadow: 0 2px 24px #000a;
+  padding-bottom: 32px;
+}
+.profile-header {
+  position: relative;
+  background: #16181c;
+  border-radius: 16px 16px 0 0;
+  padding-bottom: 48px;
+}
+.profile-banner {
+  width: 100%;
+  height: 140px;
+  background: linear-gradient(90deg, #8d4fd4 0%, #1da1f2 100%);
+  border-radius: 16px 16px 0 0;
+}
+.profile-avatar {
+  position: absolute;
+  left: 32px;
+  top: 80px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: #fff;
+  border: 5px solid #000;
+  overflow: hidden;
+  box-shadow: 0 2px 12px #0006;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+}
+.profile-info {
+  margin-left: 170px;
+  padding: 24px 32px 0 0;
+  .profile-name {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+    color: #fff;
+  }
+  .profile-username {
+    color: #1d9bf0;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+  .profile-bio {
+    color: #e7e9ea;
+    font-size: 1.08rem;
+    margin-bottom: 10px;
+  }
+  .profile-meta {
+    color: #aaa;
+    font-size: 1rem;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .edit-profile-btn {
+    margin-top: 12px;
+    padding: 8px 24px;
+    background: #1d9bf0;
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    &:hover {
+      background: #1570a6;
+    }
+  }
+}
+.profile-posts {
+  margin-top: 32px;
+  padding: 0 32px;
+  .profile-tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 18px;
+    button {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 8px 24px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      &.active, &:hover {
+        background: #1d9bf0;
+        color: #fff;
+      }
+    }
+  }
+}
+.profile-post {
+  background: #222;
+  border-radius: 12px;
+  padding: 18px 18px 12px 18px;
+  box-shadow: 0 1px 6px #0002;
+  margin-bottom: 18px;
+  .post-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    .post-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #8d4fd4;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+    .post-user-info {
+      display: flex;
+      flex-direction: column;
+      .post-user {
+        font-weight: 700;
+        color: #fff;
+        font-size: 1rem;
+      }
+      .post-date {
+        color: #aaa;
+        font-size: 0.95rem;
+      }
+    }
+    .post-actions {
+      margin-left: auto;
+      display: flex;
+      gap: 8px;
+      .edit-btn, .delete-btn {
+        background: none;
+        border: none;
+        color: #1d9bf0;
+        font-size: 0.98rem;
+        font-weight: 700;
+        cursor: pointer;
+        border-radius: 6px;
+        padding: 4px 10px;
+        transition: background 0.2s, color 0.2s;
+        &:hover {
+          background: #1d9bf0;
+          color: #fff;
+        }
+      }
+      .delete-btn {
+        color: #e0245e;
+        &:hover {
+          background: #e0245e;
+          color: #fff;
+        }
+      }
+    }
+  }
+  .post-content {
+    color: #e7e9ea;
+    font-size: 1.08rem;
+    margin-bottom: 8px;
+  }
+  .post-media {
+    margin-top: 8px;
+    img.post-image {
+      max-width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 1px 6px #0003;
+    }
+  }
+}
+.profile-empty {
+  color: #888;
+  text-align: center;
+  font-size: 1.1rem;
+  margin-top: 24px;
+}
+.profile-loading {
+  color: #1d9bf0;
+  text-align: center;
+  font-size: 1.1rem;
+  margin-top: 24px;
+}
+.profile-error {
+  color: #f87171;
+  background: #2f3336;
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-top: 24px;
+  font-size: 1rem;
+  text-align: center;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(91, 112, 131, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  .modal-content {
+    position: relative;
+    background-color: #000000;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    padding: 32px 24px;
+    h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      color: #fff;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      label {
+        color: #aaa;
+        font-size: 1rem;
+        font-weight: 700;
+      }
+      textarea, input[type="text"], input[type="password"] {
+        background: #16181c;
+        color: #e7e9ea;
+        border: 1px solid #2f3336;
+        border-radius: 8px;
+        padding: 10px;
+        font-size: 1rem;
+        margin-bottom: 8px;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      textarea:focus, input:focus {
+        border-color: #1d9bf0;
+      }
+      .modal-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 8px;
+        button {
+          flex: 1;
+          padding: 10px 0;
+          border-radius: 999px;
+          border: none;
+          font-size: 1rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: background 0.2s;
+        }
+        button[type="button"] {
+          background: #2f3336;
+          color: #aaa;
+        }
+        button[type="submit"] {
+          background: #1d9bf0;
+          color: #fff;
+        }
+        button[type="button"]:hover {
+          background: #444;
+        }
+        button[type="submit"]:hover {
+          background: #1570a6;
+        }
+      }
+    }
+  }
+}
+@media (max-width: 700px) {
+  .user-profile-container {
+    max-width: 98vw;
+    padding: 0 2vw;
+  }
+  .profile-header {
+    padding-bottom: 80px;
+  }
+  .profile-avatar {
+    left: 16px;
+    top: 60px;
+    width: 80px;
+    height: 80px;
+  }
+  .profile-info {
+    margin-left: 110px;
+    padding: 16px 8px 0 0;
+    .profile-name {
+      font-size: 1.3rem;
+    }
+  }
+  .profile-posts {
+    padding: 0 8px;
+  }
+} 

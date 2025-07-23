@@ -135,6 +135,7 @@
     .sidebar__bottom {
         padding: 12px;
         margin-top: auto;
+        position: relative;
 
         .sidebar__user {
             display: flex;
@@ -144,11 +145,10 @@
             border-radius: 24px;
             cursor: pointer;
             transition: background-color 0.2s ease;
-
+            position: relative;
             &:hover {
                 background-color: rgba(231, 233, 234, 0.1);
             }
-
             .sidebar__avatar {
                 width: 40px;
                 height: 40px;
@@ -162,14 +162,12 @@
                 font-weight: 700;
                 flex-shrink: 0;
             }
-
             .sidebar__user-info {
                 display: flex;
                 flex-direction: column;
                 line-height: 1.2;
                 flex: 1;
                 min-width: 0;
-
                 .sidebar__user-name {
                     font-size: 15px;
                     font-weight: 700;
@@ -178,7 +176,6 @@
                     overflow: hidden;
                     text-overflow: ellipsis;
                 }
-
                 .sidebar__user-handle {
                     font-size: 15px;
                     color: #71767b;
@@ -187,17 +184,55 @@
                     text-overflow: ellipsis;
                 }
             }
-
             .sidebar__user-more {
                 margin-left: auto;
                 color: #e7e9ea;
                 flex-shrink: 0;
                 padding: 4px;
-
+                border-radius: 50%;
+                cursor: pointer;
+                transition: background 0.2s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                &:hover {
+                    background: #2226;
+                }
                 svg {
-                    width: 18.75px;
-                    height: 18.75px;
+                    width: 22px;
+                    height: 22px;
                     fill: currentColor;
+                }
+            }
+            .sidebar__user-menu {
+                position: absolute;
+                bottom: 60px;
+                left: 0;
+                background: #222;
+                color: #fff;
+                border-radius: 12px;
+                box-shadow: 0 2px 16px #0006;
+                min-width: 220px;
+                z-index: 100;
+                padding: 8px 0;
+                display: flex;
+                flex-direction: column;
+                .sidebar__user-menu-item {
+                    padding: 12px 20px;
+                    font-size: 1rem;
+                    color: #fff;
+                    cursor: pointer;
+                    transition: background 0.2s;
+                    &:hover {
+                        background: #333;
+                    }
+                }
+                .sidebar__user-menu-item:last-child {
+                    color: #e0245e;
+                    &:hover {
+                        background: #e0245e;
+                        color: #fff;
+                    }
                 }
             }
         }

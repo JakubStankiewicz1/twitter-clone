@@ -78,10 +78,12 @@
         </li>
         
         <li>
-          <div class="sidebar__icon">
-            <img src="assets/icons/user_outline.png" alt="Profile" />
-          </div>
-          <span class="sidebar__label">Profile</span>
+          <a routerLink="/profile" routerLinkActive="active">
+            <div class="sidebar__icon">
+              <img src="assets/icons/user_outline.png" alt="Profile" />
+            </div>
+            <span class="sidebar__label">Profile</span>
+          </a>
         </li>
         
         <li>
@@ -100,31 +102,28 @@
     </div>
     
     <div class="sidebar__bottom">
-      <div class="sidebar__user" *ngIf="currentUser; else notLoggedIn">
+      <div class="sidebar__user" *ngIf="currentUser">
         <div class="sidebar__avatar">{{ getInitials(currentUser.username) }}</div>
         <div class="sidebar__user-info">
           <span class="sidebar__user-name">{{ currentUser.username }}</span>
-          <span class="sidebar__user-handle">{{ currentUser.email }}</span>
+          <span class="sidebar__user-handle">{{ '@' + currentUser.username }}</span>
         </div>
-        <div class="sidebar__user-more" (click)="logout()" title="Wyloguj się">
+        <div class="sidebar__user-more" (click)="toggleUserMenu($event)" tabindex="0">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <g>
-              <path d="M16 13v-2H7V8l-5 4 5 4v-3z"></path>
-              <path d="M20 3h-9c-1.103 0-2 .897-2 2v4h2V5h9v14h-9v-4H9v4c0 1.103.897 2 2 2h9c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2z"></path>
+              <circle cx="5" cy="12" r="2"></circle>
+              <circle cx="12" cy="12" r="2"></circle>
+              <circle cx="19" cy="12" r="2"></circle>
             </g>
           </svg>
         </div>
+        <div class="sidebar__user-menu" *ngIf="showUserMenu">
+          <div class="sidebar__user-menu-item" (click)="addAccount()">Add an existing account</div>
+          <div class="sidebar__user-menu-item" (click)="logout()">Log out {{ '@' + currentUser.username }}</div>
+        </div>
       </div>
       
-      <ng-template #notLoggedIn>
-        <div class="sidebar__user">
-          <div class="sidebar__avatar">?</div>
-          <div class="sidebar__user-info">
-            <span class="sidebar__user-name">Niezalogowany</span>
-            <span class="sidebar__user-handle">Zaloguj się, aby korzystać z serwisu</span>
-          </div>
-        </div>
-      </ng-template>
+      <!-- Usunięto nieużywany blok notLoggedIn -->
     </div>
   </div>
 </div>

@@ -80,4 +80,13 @@ public class CommentController {
         commentService.deleteComment(commentId);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/api/comments/user/{username}")
+    @ResponseBody
+    public ResponseEntity<List<CommentDto>> getCommentsByUser(@PathVariable("username") String username) {
+        List<CommentDto> comments = commentService.getCommentsByUsername(username).stream()
+                .map(comment -> new CommentDto(comment.getId(), comment.getContent(), comment.getUser().getUsername(), comment.getCreatedAt()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(comments);
+    }
 } 
