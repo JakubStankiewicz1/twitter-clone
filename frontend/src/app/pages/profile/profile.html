@@ -1,5 +1,6 @@
-<app-layout>
-  <div class="user-profile-container" *ngIf="!loading && user; else loadingOrError">
+<div class="user-profile-row">
+  <app-sidebar class="user_one" />
+  <div class="user-profile-container user_two" *ngIf="!loading && user; else loadingOrError">
     <div class="profile-header">
       <div class="profile-banner"></div>
       <div class="profile-avatar">
@@ -56,28 +57,28 @@
         </div>
       </ng-container>
     </div>
-  </div>
-  <ng-template #loadingOrError>
-    <div *ngIf="loading" class="profile-loading">Loading profile...</div>
-    <div *ngIf="error" class="profile-error">{{ error }}</div>
-  </ng-template>
-
-  <!-- Edit Profile Modal -->
-  <div class="modal-overlay" *ngIf="showEditModal" (click)="closeEditModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <h2>Edit Profile</h2>
-      <form (ngSubmit)="saveProfile()">
-        <label>Bio</label>
-        <textarea [(ngModel)]="editBio" name="bio" maxlength="160"></textarea>
-        <label>Avatar URL</label>
-        <input [(ngModel)]="editAvatar" name="avatar" type="text" />
-        <label>New Password</label>
-        <input [(ngModel)]="editPassword" name="password" type="password" />
-        <div class="modal-actions">
-          <button type="button" (click)="closeEditModal()">Cancel</button>
-          <button type="submit">Save</button>
-        </div>
-      </form>
+    <!-- Edit Profile Modal -->
+    <div class="modal-overlay" *ngIf="showEditModal" (click)="closeEditModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2>Edit Profile</h2>
+        <form (ngSubmit)="saveProfile()">
+          <label>Bio</label>
+          <textarea [(ngModel)]="editBio" name="bio" maxlength="160"></textarea>
+          <label>Avatar URL</label>
+          <input [(ngModel)]="editAvatar" name="avatar" type="text" />
+          <label>New Password</label>
+          <input [(ngModel)]="editPassword" name="password" type="password" />
+          <div class="modal-actions">
+            <button type="button" (click)="closeEditModal()">Cancel</button>
+            <button type="submit">Save</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</app-layout> 
+  <app-sidebar-right class="user_three" />
+</div>
+<ng-template #loadingOrError>
+  <div *ngIf="loading" class="profile-loading">Loading profile...</div>
+  <div *ngIf="error" class="profile-error">{{ error }}</div>
+</ng-template> 

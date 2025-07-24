@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 
 export interface Message {
   id: number;
-  sender: { id: number; username: string };
-  recipient: { id: number; username: string };
+  sender: string; // username nadawcy
+  receiver: string; // username odbiorcy
   content: string;
   createdAt: string;
   read: boolean;

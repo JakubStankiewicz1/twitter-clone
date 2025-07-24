@@ -1,42 +1,72 @@
-<div class="post-page-container">
-  <ng-container *ngIf="loading">Ładowanie posta...</ng-container>
-  <ng-container *ngIf="error">{{ error }}</ng-container>
-  <ng-container *ngIf="!loading && post">
-    <div class="post-card">
-      <div class="post-header">
-        <div class="post-avatar">{{ post.user.username.charAt(0).toUpperCase() }}</div>
-        <div class="post-user-info">
-          <span class="post-user">{{ post.user.username }}</span>
-          <span class="post-date">{{ post.createdAt | date:'short' }}</span>
+<div class="post-page-row">
+  <app-sidebar class="post_one" />
+  <div class="post-page-container post_two">
+    <!-- Górny pasek -->
+    <div class="post-header-bar">
+      <button class="back-btn" (click)="goBack()" aria-label="Back">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 19L8 12L15 5" stroke="#e7e9ea" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <span class="post-header-title">Post</span>
+    </div>
+    <ng-container *ngIf="loading">Ładowanie posta...</ng-container>
+    <ng-container *ngIf="error">{{ error }}</ng-container>
+    <ng-container *ngIf="!loading && post">
+      <div class="post-card">
+        <div class="post-header">
+          <div class="post-avatar">{{ post.user.username.charAt(0).toUpperCase() }}</div>
+          <div class="post-user-info">
+            <span class="post-user">{{ post.user.username }}</span>
+            <span class="post-date">{{ post.createdAt | date:'short' }}</span>
+          </div>
+        </div>
+        <div class="post-content">{{ post.content }}</div>
+        <div *ngIf="post.imageUrl" class="post-media">
+          <img [src]="post.imageUrl" alt="Obrazek do posta" class="post-image" />
+        </div>
+        <!-- Ikony pod postem -->
+        <div class="post-actions-row">
+          <button class="icon-btn comment-btn" title="Comment">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M14.046 2.242c-4.943 0-8.964 3.807-8.964 8.608 0 2.073.81 3.96 2.19 5.39-.07.27-.45 1.74-.52 2.01-.08.28.1.28.21.26.09-.02 2.24-.31 3.16-.44.87.24 1.8.37 2.82.37 4.943 0 8.964-3.807 8.964-8.608 0-4.8-4.021-8.607-8.964-8.607z" fill="#71767b"/></svg>
+            <span>{{ comments.length }}</span>
+          </button>
+          <button class="icon-btn retweet-btn" title="Retweet">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M23 15v-2a4 4 0 0 0-4-4H6.83l1.58-1.59a1 1 0 1 0-1.42-1.42l-3.3 3.3a1 1 0 0 0 0 1.42l3.3 3.3a1 1 0 0 0 1.42-1.42L6.83 13H19a2 2 0 0 1 2 2v2a1 1 0 1 0 2 0z" fill="#71767b"/></svg>
+            <span>0</span>
+          </button>
+          <button class="icon-btn like-btn" [class.liked]="liked" (click)="toggleLike()" title="Like">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+              <path [attr.fill]="liked ? '#e0245e' : 'none'" stroke="#e0245e" stroke-width="2" d="M16.697 4.592c-1.318 0-2.637.527-3.697 1.586-1.06-1.06-2.379-1.586-3.697-1.586-2.485 0-4.5 2.015-4.5 4.5 0 4.28 7.197 9.408 7.197 9.408s7.197-5.128 7.197-9.408c0-2.485-2.015-4.5-4.5-4.5z"/>
+            </svg>
+            <span>{{ likesCount }}</span>
+          </button>
+          <button class="icon-btn share-btn" title="Share">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M18 8.59V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3.59l3.29 3.3a1 1 0 0 0 1.42-1.42l-5-5a1 1 0 0 0-1.42 0l-5 5a1 1 0 0 0 1.42 1.42l3.29-3.3z" fill="#71767b"/></svg>
+          </button>
         </div>
       </div>
-      <div class="post-content">{{ post.content }}</div>
-      <div *ngIf="post.imageUrl" class="post-media">
-        <img [src]="post.imageUrl" alt="Obrazek do posta" class="post-image" />
-      </div>
-      <div class="post-actions">
-        <!-- Możesz dodać obsługę lajków tutaj w przyszłości -->
-      </div>
-    </div>
-    <div class="comments-section">
-      <h2>Komentarze</h2>
-      <form class="add-comment-form" (ngSubmit)="addComment()">
-        <textarea [(ngModel)]="newComment" name="newComment" placeholder="Dodaj komentarz..." rows="2" [disabled]="addingComment"></textarea>
-        <button type="submit" [disabled]="!newComment.trim() || addingComment">Dodaj</button>
-      </form>
-      <div *ngIf="comments.length === 0" class="empty-comments">Brak komentarzy.</div>
-      <div class="comment-list">
-        <div *ngFor="let comment of comments" class="comment-item">
-          <div class="comment-avatar">{{ comment.username.charAt(0).toUpperCase() }}</div>
-          <div class="comment-body">
-            <div class="comment-header">
-              <span class="comment-user">{{ comment.username }}</span>
-              <span class="comment-date">{{ comment.createdAt | date:'short' }}</span>
+      <!-- Komentarze pod postem -->
+      <div class="comments-section">
+        <form class="add-comment-form" (ngSubmit)="addComment()">
+          <textarea [(ngModel)]="newComment" name="newComment" placeholder="Dodaj komentarz..." rows="2" [disabled]="addingComment"></textarea>
+          <button type="submit" [disabled]="!newComment.trim() || addingComment">Dodaj</button>
+        </form>
+        <div *ngIf="comments.length === 0" class="empty-comments">Brak komentarzy.</div>
+        <div class="comment-list">
+          <div *ngFor="let comment of comments" class="comment-item">
+            <div class="comment-avatar">{{ comment.username.charAt(0).toUpperCase() }}</div>
+            <div class="comment-body">
+              <div class="comment-header">
+                <span class="comment-user">{{ comment.username }}</span>
+                <span class="comment-date">{{ comment.createdAt | date:'short' }}</span>
+              </div>
+              <div class="comment-content">{{ parseContent(comment.content) }}</div>
             </div>
-            <div class="comment-content">{{ comment.content }}</div>
           </div>
         </div>
       </div>
-    </div>
-  </ng-container>
+    </ng-container>
+  </div>
+  <app-sidebar-right class="post_three" />
 </div> 

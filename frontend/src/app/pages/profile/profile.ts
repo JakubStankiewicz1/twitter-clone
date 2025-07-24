@@ -5,11 +5,13 @@ import { AppLayout } from '../../components/app-layout/app-layout';
 import { UserService, UserComment } from '../../services/user.service';
 import { PostService, Post } from '../../services/post.service';
 import { UserResponse } from '../../services/auth.service';
+import { Sidebar } from '../../components/sidebar/sidebar';
+import { SidebarRight } from '../../components/sidebar-right/sidebar-right';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, AppLayout],
+  imports: [CommonModule, FormsModule, Sidebar, SidebarRight],
   templateUrl: './profile.html',
   styleUrl: './profile.scss'
 })

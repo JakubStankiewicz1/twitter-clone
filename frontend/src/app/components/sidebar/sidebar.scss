@@ -45,35 +45,47 @@
             list-style: none;
             padding: 0;
             margin: 0;
-
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            // align-items: center;
+            gap: 8px;
             li {
                 display: flex;
+                flex-direction: row;
                 align-items: center;
-                gap: 20px;
+                gap: 8px;
                 font-size: 20px;
                 font-weight: 400;
                 line-height: 24px;
-                padding: 12px;
-                margin-bottom: 2px;
+                padding: 8px 10px;
+                margin-bottom: 0;
                 border-radius: 24px;
                 cursor: pointer;
                 transition: background-color 0.2s ease;
                 color: #e7e9ea;
-
+                a, span {
+                    text-decoration: none !important;
+                }
                 &:hover {
                     background-color: rgba(231, 233, 234, 0.1);
                 }
-
                 &.active {
                     font-weight: 700;
-
                     .sidebar__icon svg {
                         fill: #e7e9ea;
                     }
-
                     .sidebar__label {
                         color: #e7e9ea;
                     }
+                }
+
+                .sidebar__menu_ele {
+                    // background-color: red;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 8px;
                 }
 
                 .sidebar__icon {
@@ -83,20 +95,17 @@
                     align-items: center;
                     justify-content: center;
                     flex-shrink: 0;
-
                     img {
                         width: 26.25px;
                         height: 26.25px;
                         filter: brightness(0) invert(1);
                     }
-
                     svg {
                         width: 26.25px;
                         height: 26.25px;
                         fill: #e7e9ea;
                     }
                 }
-
                 .sidebar__label {
                     flex: 1;
                     color: #e7e9ea;

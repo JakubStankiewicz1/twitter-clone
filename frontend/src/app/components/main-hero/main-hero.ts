@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-main-hero',
-  imports: [CommonModule, FormsModule, DatePipe, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './main-hero.html',
   styleUrl: './main-hero.scss'
 })

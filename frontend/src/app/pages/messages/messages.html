@@ -1,10 +1,31 @@
+<div class="messages-page-row">
+  <app-sidebar class="messages_one" />
+  <div class="messages_two">
 <div class="messages-3col-container">
-  <!-- Środkowa kolumna: powitanie -->
-  <div class="messages-welcome">
-    <div class="welcome-title">Welcome to your inbox!</div>
-    <div class="welcome-desc">Drop a line, share posts and more with private conversations between you and others on X.</div>
-    <button class="primary-btn" (click)="openNewMessageModal()">Write a message</button>
-  </div>
+  <div class="messages-3col-container-diver">
+  <div class="messages-header">Messages</div>
+  <ng-container *ngIf="conversations.length > 0; else welcomeBlock">
+    <div class="conversations-list conversations-list-center">
+      <div *ngFor="let conv of conversations" class="conversation" (click)="selectConversation(conv)">
+        <div class="avatar">{{ conv.otherUser.username.charAt(0).toUpperCase() }}</div>
+        <div class="conv-info">
+          <div class="conv-name">{{ conv.otherUser.username }}</div>
+          <!-- <div class="conv-last">{{ conv.lastMessage ? conv.lastMessage.content : 'No messages yet' }}</div> -->
+        </div>
+        <div class="conv-date">
+          {{ conv.lastMessage && conv.lastMessage.createdAt ? (conv.lastMessage.createdAt | date:'short') : '' }}
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #welcomeBlock>
+    <div class="messages-welcome">
+      <div class="welcome-title">Welcome to your inbox!</div>
+      <div class="welcome-desc">Drop a line, share posts and more with private conversations between you and others on X.</div>
+      <button class="primary-btn" (click)="openNewMessageModal()">Write a message</button>
+    </div>
+  </ng-template>
+</div>
 
   <!-- Prawa kolumna: select a message -->
   <div class="messages-select" *ngIf="!selectedUser">
@@ -13,20 +34,7 @@
     <button class="primary-btn" (click)="openNewMessageModal()">New message</button>
     <div *ngIf="loading" class="loader">Loading conversations...</div>
     <div *ngIf="!loading && conversations.length === 0" class="empty">No conversations yet.</div>
-    <div *ngIf="!loading && conversations.length > 0">
-      <div class="conversations-list">
-        <div *ngFor="let conv of conversations" class="conversation" (click)="selectConversation(conv)">
-          <div class="avatar">{{ conv.otherUser.username.charAt(0).toUpperCase() }}</div>
-          <div class="conv-info">
-            <div class="conv-name">{{ conv.otherUser.username }}</div>
-            <div class="conv-last">{{ conv.lastMessage ? conv.lastMessage.content : 'No messages yet' }}</div>
-          </div>
-          <div class="conv-date">
-            {{ conv.lastMessage && conv.lastMessage.createdAt ? (conv.lastMessage.createdAt | date:'short') : '' }}
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- Usunięto listę konwersacji z prawej kolumny -->
   </div>
 
   <!-- Widok czatu -->
@@ -41,7 +49,7 @@
     <div class="chat-messages">
       <div *ngIf="loading" class="loader">Loading messages...</div>
       <div *ngIf="!loading && messages.length === 0" class="empty">No messages yet. Say hello!</div>
-      <div *ngFor="let msg of messages" class="chat-message" [class.me]="msg.sender.id === currentUser?.id">
+      <div *ngFor="let msg of messages" class="chat-message" [class.me]="msg.sender === currentUser?.username">
         <div class="msg-content">{{ msg.content }}</div>
         <div class="msg-date">{{ msg.createdAt | date:'shortTime' }}</div>
       </div>
@@ -52,4 +60,6 @@
     </form>
   </div>
   <app-new-message-modal *ngIf="showNewMessageModal" (close)="closeNewMessageModal()" (userSelected)="onUserSelected($event)"></app-new-message-modal>
+</div>
+  </div>
 </div> 

@@ -4,57 +4,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PostService, Post } from '../../services/post.service';
 import { UserService, UserSearchResult } from '../../services/user.service';
-import { AppLayout } from '../../components/app-layout/app-layout';
+import { Sidebar } from '../../components/sidebar/sidebar';
+import { SidebarRight } from '../../components/sidebar-right/sidebar-right';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-post-page',
-  imports: [CommonModule, FormsModule, AppLayout],
-  template: `
-    <app-layout>
-      <div class="post-page-container">
-        <ng-container *ngIf="loading">Ładowanie posta...</ng-container>
-        <ng-container *ngIf="error">{{ error }}</ng-container>
-        <ng-container *ngIf="!loading && post">
-          <div class="post-card">
-            <div class="post-header">
-              <div class="post-avatar">{{ post.user.username.charAt(0).toUpperCase() }}</div>
-              <div class="post-user-info">
-                <span class="post-user">{{ post.user.username }}</span>
-                <span class="post-date">{{ post.createdAt | date:'short' }}</span>
-              </div>
-            </div>
-            <div class="post-content">{{ post.content }}</div>
-            <div *ngIf="post.imageUrl" class="post-media">
-              <img [src]="post.imageUrl" alt="Obrazek do posta" class="post-image" />
-            </div>
-            <div class="post-actions">
-              <!-- Możesz dodać obsługę lajków tutaj w przyszłości -->
-            </div>
-          </div>
-          <div class="comments-section">
-            <h2>Komentarze</h2>
-            <form class="add-comment-form" (ngSubmit)="addComment()">
-              <textarea [(ngModel)]="newComment" name="newComment" placeholder="Dodaj komentarz..." rows="2" [disabled]="addingComment"></textarea>
-              <button type="submit" [disabled]="!newComment.trim() || addingComment">Dodaj</button>
-            </form>
-            <div *ngIf="comments.length === 0" class="empty-comments">Brak komentarzy.</div>
-            <div class="comment-list">
-              <div *ngFor="let comment of comments" class="comment-item">
-                <div class="comment-avatar">{{ comment.username.charAt(0).toUpperCase() }}</div>
-                <div class="comment-body">
-                  <div class="comment-header">
-                    <span class="comment-user">{{ comment.username }}</span>
-                    <span class="comment-date">{{ comment.createdAt | date:'short' }}</span>
-                  </div>
-                  <div class="comment-content">{{ comment.content }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ng-container>
-      </div>
-    </app-layout>
-  `,
+  imports: [CommonModule, FormsModule, Sidebar, SidebarRight],
+  templateUrl: './post-page.html',
   styleUrl: './post-page.scss'
 })
 export class PostPage implements OnInit {
@@ -64,11 +21,14 @@ export class PostPage implements OnInit {
   error: string | null = null;
   newComment = '';
   addingComment = false;
+  liked = false;
+  likesCount = 0; // TODO: pobierz z backendu, jeśli będzie dostępne
 
   constructor(
     private route: ActivatedRoute,
     private postService: PostService,
-    private userService: UserService
+    private userService: UserService,
+    private location: Location
   ) {}
 
   ngOnInit() {
@@ -88,7 +48,12 @@ export class PostPage implements OnInit {
       next: posts => {
         this.post = posts.find(p => p.id === postId) || null;
         this.loading = false;
-        if (!this.post) this.error = 'Nie znaleziono posta.';
+        if (!this.post) {
+          this.error = 'Nie znaleziono posta.';
+        } else {
+          this.likesCount = 0; // Brak pola likesCount w Post, domyślnie 0
+          this.liked = false; // Możesz tu dodać logikę sprawdzania czy user już polubił
+        }
       },
       error: () => {
         this.error = 'Błąd podczas ładowania posta.';
@@ -122,5 +87,26 @@ export class PostPage implements OnInit {
         alert('Błąd podczas dodawania komentarza.');
       }
     });
+  }
+
+  goBack() {
+    this.location.back();
+  }
+
+  toggleLike() {
+    if (!this.post) return;
+    this.liked = !this.liked;
+    this.likesCount += this.liked ? 1 : -1;
+    // Tu możesz dodać wywołanie serwisu do backendu (optymistycznie)
+    // this.postService.likePost(this.post.id).subscribe(...)
+  }
+
+  parseContent(content: string): string {
+    try {
+      const obj = JSON.parse(content);
+      return obj.content || content;
+    } catch {
+      return content;
+    }
   }
 } 

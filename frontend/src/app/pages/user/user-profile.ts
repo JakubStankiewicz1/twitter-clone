@@ -3,76 +3,14 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { UserService, UserSearchResult, UserComment } from '../../services/user.service';
 import { PostService, Post } from '../../services/post.service';
-import { AppLayout } from '../../components/app-layout/app-layout';
 import { AuthService } from '../../services/auth.service';
+import { Sidebar } from '../../components/sidebar/sidebar';
+import { SidebarRight } from '../../components/sidebar-right/sidebar-right';
 
 @Component({
   selector: 'app-user-profile',
-  imports: [CommonModule, AppLayout],
-  template: `
-    <app-layout>
-      <div class="user-profile-container" *ngIf="!loading && user; else loadingOrError">
-        <div class="profile-header">
-          <div class="profile-banner"></div>
-          <div class="profile-avatar">
-            <img [src]="getAvatarUrl()" alt="Avatar" />
-          </div>
-          <div class="profile-info">
-            <h1 class="profile-name">{{ user.username }}</h1>
-            <div class="profile-username">&#64;{{ user.username }}</div>
-            <div class="profile-bio" *ngIf="user.bio">{{ user.bio }}</div>
-            <div class="profile-meta">
-              <span *ngIf="user.followersCount !== undefined">{{ user.followersCount }} followers</span>
-              <span *ngIf="user.followingCount !== undefined">{{ user.followingCount }} following</span>
-              <span *ngIf="user.createdAt">• Joined {{ user.createdAt | date:'MMMM yyyy' }}</span>
-            </div>
-            <button *ngIf="!isOwnProfile && isFollowing !== null" (click)="toggleFollow()" class="follow-btn">
-              {{ isFollowing ? 'Unfollow' : 'Follow' }}
-            </button>
-          </div>
-        </div>
-        <div class="profile-posts">
-          <div class="profile-tabs">
-            <button [class.active]="tab === 'posts'" (click)="setTab('posts')">Posts</button>
-            <button [class.active]="tab === 'replies'" (click)="setTab('replies')">Replies</button>
-          </div>
-          <ng-container *ngIf="tab === 'posts'">
-            <div *ngIf="posts.length === 0" class="profile-empty">Brak postów.</div>
-            <div *ngFor="let post of posts" class="profile-post">
-              <div class="post-header">
-                <div class="post-avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
-                <div class="post-user-info">
-                  <span class="post-user">{{ user.username }}</span>
-                  <span class="post-date">{{ post.createdAt | date:'short' }}</span>
-                </div>
-              </div>
-              <div class="post-content">{{ post.content }}</div>
-              <div *ngIf="post.imageUrl" class="post-media">
-                <img [src]="post.imageUrl" alt="Obrazek do posta" class="post-image" />
-              </div>
-            </div>
-          </ng-container>
-          <ng-container *ngIf="tab === 'replies'">
-            <div *ngIf="replies.length === 0" class="profile-empty">Brak odpowiedzi.</div>
-            <div *ngFor="let reply of replies" class="profile-post">
-              <div class="post-header">
-                <div class="post-avatar">{{ reply.username.charAt(0).toUpperCase() }}</div>
-                <div class="post-user-info">
-                  <span class="post-user">{{ reply.username }}</span>
-                  <span class="post-date">{{ reply.createdAt | date:'short' }}</span>
-                </div>
-              </div>
-              <div class="post-content">{{ reply.content }}</div>
-            </div>
-          </ng-container>
-        </div>
-      </div>
-      <ng-template #loadingOrError>
-        <div *ngIf="loading" class="profile-loading">Ładowanie profilu...</div>
-        <div *ngIf="error" class="profile-error">{{ error }}</div>
-      </ng-template>
-    </app-layout>
-  `,
+  imports: [CommonModule, Sidebar, SidebarRight],
+  templateUrl: './user-profile.html',
   styleUrl: './user-profile.scss'
 })
 export class UserProfile implements OnInit {
@@ -86,6 +24,7 @@ export class UserProfile implements OnInit {
   isFollowing: boolean | null = null;
   isOwnProfile = false;
   currentUser: any = null;
+  isFollowLoading = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -151,15 +90,29 @@ export class UserProfile implements OnInit {
 
   toggleFollow() {
     if (!this.user || !this.currentUser) return;
+    const prev = this.isFollowing;
+    this.isFollowLoading = true;
     if (this.isFollowing) {
-      this.userService.unfollow(this.user.username).subscribe(() => {
-        this.isFollowing = false;
-        if (this.user) this.user.followersCount = (this.user.followersCount || 1) - 1;
+      this.isFollowing = false;
+      if (this.user) this.user.followersCount = (this.user.followersCount || 1) - 1;
+      this.userService.unfollow(this.user.username).subscribe({
+        next: () => { this.isFollowLoading = false; },
+        error: () => {
+          this.isFollowing = prev;
+          if (this.user) this.user.followersCount = (this.user.followersCount || 0) + 1;
+          this.isFollowLoading = false;
+        }
       });
     } else {
-      this.userService.follow(this.user.username).subscribe(() => {
-        this.isFollowing = true;
-        if (this.user) this.user.followersCount = (this.user.followersCount || 0) + 1;
+      this.isFollowing = true;
+      if (this.user) this.user.followersCount = (this.user.followersCount || 0) + 1;
+      this.userService.follow(this.user.username).subscribe({
+        next: () => { this.isFollowLoading = false; },
+        error: () => {
+          this.isFollowing = prev;
+          if (this.user) this.user.followersCount = (this.user.followersCount || 1) - 1;
+          this.isFollowLoading = false;
+        }
       });
     }
   }

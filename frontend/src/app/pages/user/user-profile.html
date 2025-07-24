@@ -1,37 +1,70 @@
-<div class="user-profile-container" *ngIf="!loading && user; else loadingOrError">
-  <div class="profile-header">
-    <div class="profile-banner"></div>
-    <div class="profile-avatar">
-      <img [src]="getAvatarUrl()" alt="Avatar" />
-    </div>
-    <div class="profile-info">
-      <h1 class="profile-name">{{ user.username }}</h1>
-      <div class="profile-username">&#64;{{ user.username }}</div>
-      <div class="profile-bio" *ngIf="user.bio">{{ user.bio }}</div>
-      <div class="profile-meta">
-        <span *ngIf="user.followersCount !== undefined">{{ user.followersCount }} followers</span>
-        <span *ngIf="user.followingCount !== undefined">{{ user.followingCount }} following</span>
-        <span *ngIf="user.createdAt">• Joined {{ user.createdAt | date:'MMMM yyyy' }}</span>
+<div class="user-profile-row">
+  <app-sidebar class="user_one" />
+  <div class="user-profile-container user_two" *ngIf="!loading && user; else loadingOrError">
+    <div class="profile-header">
+      <div class="profile-banner"></div>
+      <div class="profile-avatar">
+        <img [src]="getAvatarUrl()" alt="Avatar" />
       </div>
-    </div>
-  </div>
-  <div class="profile-posts">
-    <h2>Posts</h2>
-    <div *ngIf="posts.length === 0" class="profile-empty">Brak postów.</div>
-    <div *ngFor="let post of posts" class="profile-post">
-      <div class="post-header">
-        <div class="post-avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
-        <div class="post-user-info">
-          <span class="post-user">{{ user.username }}</span>
-          <span class="post-date">{{ post.createdAt | date:'short' }}</span>
+      <div class="profile-info">
+        <h1 class="profile-name">{{ user.username }}</h1>
+        <div class="profile-username">&#64;{{ user.username }}</div>
+        <div class="profile-bio" *ngIf="user.bio">{{ user.bio }}</div>
+        <div class="profile-meta">
+          <span *ngIf="user.followersCount !== undefined">{{ user.followersCount }} followers</span>
+          <span *ngIf="user.followingCount !== undefined">{{ user.followingCount }} following</span>
+          <span *ngIf="user.createdAt">• Joined {{ user.createdAt | date:'MMMM yyyy' }}</span>
         </div>
-      </div>
-      <div class="post-content">{{ post.content }}</div>
-      <div *ngIf="post.imageUrl" class="post-media">
-        <img [src]="post.imageUrl" alt="Obrazek do posta" class="post-image" />
+        <button *ngIf="!isOwnProfile && isFollowing !== null"
+                (click)="toggleFollow()"
+                [ngClass]="{
+                  'follow-btn': true,
+                  'following': isFollowing,
+                  'unfollow': isFollowing && !isFollowLoading
+                }"
+                [attr.disabled]="isFollowLoading ? true : null">
+          <span *ngIf="isFollowLoading" class="follow-spinner"></span>
+          {{ isFollowing ? 'Following' : 'Follow' }}
+        </button>
       </div>
     </div>
+    <div class="profile-posts">
+      <div class="profile-tabs">
+        <button [class.active]="tab === 'posts'" (click)="setTab('posts')">Posts</button>
+        <button [class.active]="tab === 'replies'" (click)="setTab('replies')">Replies</button>
+      </div>
+      <ng-container *ngIf="tab === 'posts'">
+        <div *ngIf="posts.length === 0" class="profile-empty">Brak postów.</div>
+        <div *ngFor="let post of posts" class="profile-post">
+          <div class="post-header">
+            <div class="post-avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
+            <div class="post-user-info">
+              <span class="post-user">{{ user.username }}</span>
+              <span class="post-date">{{ post.createdAt | date:'short' }}</span>
+            </div>
+          </div>
+          <div class="post-content">{{ post.content }}</div>
+          <div *ngIf="post.imageUrl" class="post-media">
+            <img [src]="post.imageUrl" alt="Obrazek do posta" class="post-image" />
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="tab === 'replies'">
+        <div *ngIf="replies.length === 0" class="profile-empty">Brak odpowiedzi.</div>
+        <div *ngFor="let reply of replies" class="profile-post">
+          <div class="post-header">
+            <div class="post-avatar">{{ reply.username.charAt(0).toUpperCase() }}</div>
+            <div class="post-user-info">
+              <span class="post-user">{{ reply.username }}</span>
+              <span class="post-date">{{ reply.createdAt | date:'short' }}</span>
+            </div>
+          </div>
+          <div class="post-content">{{ reply.content }}</div>
+        </div>
+      </ng-container>
+    </div>
   </div>
+  <app-sidebar-right class="user_three" />
 </div>
 <ng-template #loadingOrError>
   <div *ngIf="loading" class="profile-loading">Ładowanie profilu...</div>

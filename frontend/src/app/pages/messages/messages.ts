@@ -4,68 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { MessageService, Message } from '../../services/message.service';
 import { AuthService, UserResponse } from '../../services/auth.service';
 import { NewMessageModal } from '../../components/messages/new-message-modal';
-import { AppLayout } from '../../components/app-layout/app-layout';
+import { Sidebar } from '../../components/sidebar/sidebar';
 
 @Component({
   selector: 'app-messages',
-  imports: [CommonModule, FormsModule, NewMessageModal, AppLayout],
-  template: `
-    <app-layout>
-      <div class="messages-3col-container">
-        <!-- Środkowa kolumna: powitanie -->
-        <div class="messages-welcome">
-          <div class="welcome-title">Welcome to your inbox!</div>
-          <div class="welcome-desc">Drop a line, share posts and more with private conversations between you and others on X.</div>
-          <button class="primary-btn" (click)="openNewMessageModal()">Write a message</button>
-        </div>
-        <!-- Prawa kolumna: select a message -->
-        <div class="messages-select" *ngIf="!selectedUser">
-          <div class="select-title">Select a message</div>
-          <div class="select-desc">Choose from your existing conversations, start a new one, or just keep swimming.</div>
-          <button class="primary-btn" (click)="openNewMessageModal()">New message</button>
-          <div *ngIf="loading" class="loader">Loading conversations...</div>
-          <div *ngIf="!loading && conversations.length === 0" class="empty">No conversations yet.</div>
-          <div *ngIf="!loading && conversations.length > 0">
-            <div class="conversations-list">
-              <div *ngFor="let conv of conversations" class="conversation" (click)="selectConversation(conv)">
-                <div class="avatar">{{ conv.otherUser.username.charAt(0).toUpperCase() }}</div>
-                <div class="conv-info">
-                  <div class="conv-name">{{ conv.otherUser.username }}</div>
-                  <div class="conv-last">{{ conv.lastMessage ? conv.lastMessage.content : 'No messages yet' }}</div>
-                </div>
-                <div class="conv-date">
-                  {{ conv.lastMessage && conv.lastMessage.createdAt ? (conv.lastMessage.createdAt | date:'short') : '' }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Widok czatu -->
-        <div class="chat-window" *ngIf="selectedUser">
-          <div class="chat-header">
-            <button class="back-btn" (click)="backToConversations()" title="Back to conversations">←</button>
-            <div class="avatar">{{ selectedUser.username.charAt(0).toUpperCase() }}</div>
-            <div class="chat-user-info">
-              <div class="chat-name">{{ selectedUser.username }}</div>
-            </div>
-          </div>
-          <div class="chat-messages">
-            <div *ngIf="loading" class="loader">Loading messages...</div>
-            <div *ngIf="!loading && messages.length === 0" class="empty">No messages yet. Say hello!</div>
-            <div *ngFor="let msg of messages" class="chat-message" [class.me]="msg.sender.id === currentUser?.id">
-              <div class="msg-content">{{ msg.content }}</div>
-              <div class="msg-date">{{ msg.createdAt | date:'shortTime' }}</div>
-            </div>
-          </div>
-          <form class="chat-input" (ngSubmit)="sendMessage()">
-            <input [(ngModel)]="newMessage" name="newMessage" placeholder="Type a message..." autocomplete="off" />
-            <button type="submit" [disabled]="!newMessage.trim()">Send</button>
-          </form>
-        </div>
-        <app-new-message-modal *ngIf="showNewMessageModal" (close)="closeNewMessageModal()" (userSelected)="onUserSelected($event)"></app-new-message-modal>
-      </div>
-    </app-layout>
-  `,
+  imports: [CommonModule, FormsModule, NewMessageModal, Sidebar],
+  templateUrl: './messages.html',
   styleUrl: './messages.scss'
 })
 export class Messages implements OnDestroy {
