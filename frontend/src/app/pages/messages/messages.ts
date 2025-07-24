@@ -19,6 +19,8 @@ export class Messages implements OnDestroy {
   currentUser: UserResponse | null = null;
   newMessage = '';
   loading = false;
+  loadingInitial = false;
+  loadingPolling = false;
   showNewMessageModal = false;
   private pollingInterval: any = null;
 
@@ -52,14 +54,14 @@ export class Messages implements OnDestroy {
       ...conv.otherUser,
       conversationId: conv.id
     };
-    this.loadMessages();
+    this.loadMessages(true, false); // pierwsze ładowanie
     this.startPolling();
   }
 
   startPolling() {
     this.clearPolling();
     this.pollingInterval = setInterval(() => {
-      this.loadMessages(false);
+      this.loadMessages(false, true); // polling w tle
     }, 2000);
   }
 
@@ -70,13 +72,17 @@ export class Messages implements OnDestroy {
     }
   }
 
-  loadMessages(scrollToBottom: boolean = true) {
+  loadMessages(scrollToBottom: boolean = true, isPolling: boolean = false) {
     if (!this.currentUser || !this.selectedUser) return;
-    this.loading = true;
     if (!this.selectedUser || !this.selectedUser.conversationId) return;
+    if (isPolling) {
+      // nie pokazuj loadera
+    } else {
+      this.loadingInitial = true;
+    }
     this.messageService.getMessages(this.selectedUser.conversationId).subscribe((msgs: Message[]) => {
       this.messages = msgs;
-      this.loading = false;
+      if (!isPolling) this.loadingInitial = false;
       if (scrollToBottom) {
         setTimeout(() => {
           const chatMessages = document.querySelector('.chat-messages');

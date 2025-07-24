@@ -1,3 +1,5 @@
+# UWAGA: Backend jest skonfigurowany pod PostgreSQL (nie MySQL)
+
 # Instrukcja testowania endpointów użytkownika
 
 Poniżej znajdziesz instrukcje testowania każdego z endpointów użytkownika (rejestracja, logowanie, profil, edycja, usuwanie konta). Każdy krok będzie aktualizowany wraz z rozwojem backendu.

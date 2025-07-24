@@ -32,8 +32,8 @@
     <div class="select-title">Select a message</div>
     <div class="select-desc">Choose from your existing conversations, start a new one, or just keep swimming.</div>
     <button class="primary-btn" (click)="openNewMessageModal()">New message</button>
-    <div *ngIf="loading" class="loader">Loading conversations...</div>
-    <div *ngIf="!loading && conversations.length === 0" class="empty">No conversations yet.</div>
+    <div *ngIf="loadingInitial" class="loader">Loading conversations...</div>
+    <div *ngIf="!loadingInitial && conversations.length === 0" class="empty">No conversations yet.</div>
     <!-- Usunięto listę konwersacji z prawej kolumny -->
   </div>
 
@@ -47,8 +47,8 @@
       </div>
     </div>
     <div class="chat-messages">
-      <div *ngIf="loading" class="loader">Loading messages...</div>
-      <div *ngIf="!loading && messages.length === 0" class="empty">No messages yet. Say hello!</div>
+      <div *ngIf="loadingInitial" class="loader">Loading messages...</div>
+      <div *ngIf="!loadingInitial && messages.length === 0" class="empty">No messages yet. Say hello!</div>
       <div *ngFor="let msg of messages" class="chat-message" [class.me]="msg.sender === currentUser?.username">
         <div class="msg-content">{{ msg.content }}</div>
         <div class="msg-date">{{ msg.createdAt | date:'shortTime' }}</div>
